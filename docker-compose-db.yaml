@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15.6
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Actiup!PostgresDB
+      PGDATA: /data/postgres
+    command:
+      - bash
+      - -c
+      - docker-entrypoint.sh -c config_file=/etc/postgresql/postgres.conf -c hba_file=/etc/postgresql/pg_hba.conf
+    volumes:
+      - postgres-data:/data/postgres
+      - ./configs/postgresql:/etc/postgresql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - dotNet
+  redis:
+    image: redis/redis-stack:6.2.6-v11
+    container_name: redis
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+    networks:
+      - dotNet
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  mysql-data:
+
+networks:
+  dotNet:
+    external: true
