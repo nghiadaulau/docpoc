@@ -4,6 +4,8 @@ docker network create ${NETWORK_NAME}
 ```
 ***replace your network name***
 
+***For all configuration of username & password, please use the attached .env file***
+
 To run the services:
 ```shell
 docker compose up -f docker-compose-db up
